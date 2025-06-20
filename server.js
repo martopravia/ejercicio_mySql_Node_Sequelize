@@ -10,7 +10,7 @@ require("./models/user");
 require("./models/article");
 
 app.set("view engine", "ejs");
-app.use("/user", userRoutes); // 2) le paso mi vista url
+app.use("/users", userRoutes); // 2) le paso mi vista url
 app.use("/articles", articleRoutes); // 3)  le paso mi vista url
 
 app.listen(PORT, (req, res) => {
