@@ -1,3 +1,6 @@
+// 54) configuro todo en base a seed para el caso de la tabla de articleSeed
+// una vez configurado voy a runAllSeeds...
+
 // 25) sequelize es la instancia de la conexión, debo importarla
 //cómo tengo la instancia en index.js, la traigo del index de mis
 // modelos, la exporta en un objeto y la desestructuro.
@@ -10,13 +13,16 @@
 // 46) cambio const User = require("../models/user"); a: {User} objeto
 // sigo en runAllSeeders.js
 
-const User = require("../models/user");
+// 60) cambio  const Article = require("../models/article") por
+// const { Article, User } = require("../models") y traigo modelos
+// correctamente, sigo abajo...
+const { Article, User } = require("../models");
 // 31) requiero faker en español: le da el alias faker para usar
 const { fakerES: faker } = require("@faker-js/faker");
 
 // 24) me traigo la funcion de sequelize y la transformo en
 // una async await y la llamo
-async function seed() {
+async function articleSeed() {
   //   await sequelize.sync({ force: true });
   //   console.log("Las tablas fueron creadas");
   // 29) le paso await User.create, le mando datos, para correrlo
@@ -35,24 +41,31 @@ async function seed() {
   // pasandole users mi array creado, lo ideal libreria de datos random
   // ej Faker-js, instalo npm i @faker-js/faker, veo documentación, voy arriba
   // y lo requiero
-  const users = [];
+
+  const articles = [];
   for (let i = 0; i < 20; i++) {
-    users.push({
+    articles.push({
       // 33) al usar faker cambio aca
       //   firstname: "Paco",
       //   lastname: "Perez",
       //   email: "paco.perez@gmail.com",
       //   password: "12345",
-      firstname: faker.person.firstName(),
-      lastname: faker.person.lastName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+      title: faker.book.title(),
+      content: faker.lorem.paragraph(2),
+      author: faker.book.author(),
+      // 61) agrego un userId: le pongo que tire un numero del 1 al 20
+      // aleatorio, y se puede repetir se puede hacer con Math tb, la idea
+      // es que una persona pueda ser creador de muchos articulos
+      //corro node seeders/runAllSeeders.js, en la base de datos queda
+      // actualizado en la tabla hay una flechita en el id en la base
+      // de datos y nos lleva al usuario sigo en articleController...
+      userId: faker.number.int({ min: 1, max: 20 }),
     });
   }
-  await User.bulkCreate(users);
-  console.log("Se corrió seeder de Usuarios");
+  await Article.bulkCreate(articles);
+  console.log("Se corrió seeder de Articulos");
 }
-module.exports = seed;
+module.exports = articleSeed;
 //  41) exporto el modulo module.exports = seed;
 
 // 26) para ejecutarlo hago seeders/seed.js
